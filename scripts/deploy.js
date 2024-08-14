@@ -1,14 +1,13 @@
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
+const fs = require("fs");
 
 async function main() {
-  const [deployer] = await hre.ethers.getSigners();
-
-  const ContractFactory = await hre.ethers.getContractFactory("ZunXBT");
-  const contract = await ContractFactory.deploy(deployer.address);
-
-  await contract.waitForDeployment();
-
-  console.log(`Your NFT Contract Address: ${contract.target}`);
+  const perc20 = await ethers.deployContract("PERC20Sample");
+  await perc20.waitForDeployment();
+  const deployedContract = await perc20.getAddress();
+  fs.writeFileSync("contract.txt", deployedContract);
+  
+  console.log(`PERC20Sample was deployed to: ${deployedContract}`)
 }
 
 main().catch((error) => {
